@@ -26,6 +26,7 @@ const err = (error) => {
     const token = Vue.ls.get(ACCESS_TOKEN)
     console.log("------异常响应------",token)
     console.log("------异常响应------",error.response.status)
+    let type = error.response.request.responseType;
     switch (error.response.status) {
       case 403:
         Vue.prototype.$Jnotification.error({ message: '系统提示', description: '拒绝访问',duration: 4})
@@ -33,7 +34,6 @@ const err = (error) => {
       case 500:
         console.log("------error.response------",error.response)
         // update-begin- --- author:liusq ------ date:20200910 ---- for:处理Blob情况----
-        let type=error.response.request.responseType;
         if(type === 'blob'){
           blobToJson(data);
           break;
@@ -161,7 +161,7 @@ function blobToJson(data) {
       if (jsonData.status === 500) {
         console.log("token----------》",token)
         if(token && jsonData.message.includes("Token失效")){
-          Modal.error({
+          Vue.prototype.$Jmodal.error({
             title: '登录已过期',
             content: '很抱歉，登录已过期，请重新登录',
             okText: '重新登录',
